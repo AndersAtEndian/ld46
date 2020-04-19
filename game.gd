@@ -7,6 +7,8 @@ var plane_direction_deg := 0.0
 var plane_direction_target_deg := 0.0
 var plane_direction_frame_change := 3.0
 
+var plane_turn := 0.0
+
 var cloud_generator_scene = preload("res://cloud-generator.tscn")
 var cloud_generator = null
 
@@ -22,6 +24,9 @@ enum TILES {GRASS, WATER,
 	GRASS_CORRIDOR_0, GRASS_CORRIDOR_1, GRASS_CORRIDOR_2, GRASS_CORRIDOR_3, 
 	GRASS_TIP_0, GRASS_TIP_1, GRASS_TIP_2, GRASS_TIP_3,
 	GRASS_ISLAND}
+	
+enum GAME_STATE {IDLE, PILOT, NAVIGATOR, NOSE_GUNNER, TAIL_GUNNER, REPAIRMAN, BOMB_DROPPER}
+var game_state = GAME_STATE.IDLE
 
 func _ready():
 	randomize()
@@ -42,22 +47,35 @@ func _process(delta):
 		plane_direction_target_deg -= 5.0
 	if Input.is_action_just_pressed("ui_left"):
 		plane_direction_target_deg += 5.0
-	if Input.is_action_just_pressed("ui_down"):
-		pixels_per_second_landmarks *= 0.3
-		pixels_per_second_clouds *= 0.3
-	if Input.is_action_just_pressed("ui_up"):
-		pixels_per_second_landmarks *= 1.3
-		pixels_per_second_clouds *= 1.3
+
 		
-	if plane_direction_target_deg < -30.0:
-		plane_direction_target_deg = -30.0
-	elif plane_direction_target_deg > 30.0:
-		plane_direction_target_deg = 30.0
+	if game_state == GAME_STATE.IDLE:
+		if Input.is_key_pressed(KEY_1):
+			game_state = GAME_STATE.PILOT
+			$bomber/cockpit.visible = true
+		if Input.is_key_pressed(KEY_2):
+			game_state = GAME_STATE.NAVIGATOR
+			$bomber/map.visible = true
+
+	if game_state == GAME_STATE.PILOT:
+		if Input.is_action_just_pressed("ui_right"):
+			plane_turn += 1
+		if Input.is_action_just_pressed("ui_left"):
+			plane_turn -= 1
+			
+		if plane_turn < -2:
+			plane_turn = -2
+		elif plane_turn > 2:
+			plane_turn = 2
+			
+		$bomber/cockpit/pivot.set_rotation(deg2rad(15 * plane_turn))
+
+	if Input.is_action_just_pressed("ui_cancel"):
+		$bomber/cockpit.visible = false
+		$bomber/map.visible = false
+		game_state = GAME_STATE.IDLE
 		
-	if plane_direction_deg < plane_direction_target_deg:
-		plane_direction_deg += delta * plane_direction_frame_change
-	elif plane_direction_deg > plane_direction_target_deg:
-		plane_direction_deg -= delta * plane_direction_frame_change
+	plane_direction_deg += delta * plane_direction_frame_change * plane_turn
 		
 	$bomber.rotation = deg2rad(plane_direction_deg)
 	

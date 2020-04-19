@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://game.gd" type="Script" id=1]
 [ext_resource path="res://assets/bomber.png" type="Texture" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://menu.tscn" type="PackedScene" id=4]
 [ext_resource path="res://compass.tscn" type="PackedScene" id=5]
 [ext_resource path="res://assets/map.png" type="Texture" id=6]
+[ext_resource path="res://assets/wheel.png" type="Texture" id=7]
+[ext_resource path="res://assets/cockpit.png" type="Texture" id=8]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tiles.png 0"
@@ -312,8 +314,23 @@ texture = ExtResource( 2 )
 position = Vector2( 271.997, -574.903 )
 
 [node name="map" type="Sprite" parent="bomber"]
+visible = false
 position = Vector2( -42.4006, -208.652 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 6 )
 
 [node name="sprite_map" type="Sprite" parent="bomber/map"]
+
+[node name="cockpit" type="Sprite" parent="bomber"]
+visible = false
+position = Vector2( -45.328, -36.694 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 8 )
+
+[node name="pivot" type="Node2D" parent="bomber/cockpit"]
+position = Vector2( -72.2001, 34.2 )
+
+[node name="sprite_wheel" type="Sprite" parent="bomber/cockpit/pivot"]
+position = Vector2( -1.90001, 38.9501 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 7 )
