@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://game.gd" type="Script" id=1]
 [ext_resource path="res://assets/bomber.png" type="Texture" id=2]
 [ext_resource path="res://assets/tiles.png" type="Texture" id=3]
 [ext_resource path="res://menu.tscn" type="PackedScene" id=4]
+[ext_resource path="res://compass.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/map.png" type="Texture" id=6]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tiles.png 0"
@@ -302,6 +304,16 @@ position = Vector2( -46.9908, -188.803 )
 rotating = true
 current = true
 
-[node name="sprite" type="Sprite" parent="bomber"]
+[node name="sprite_plane" type="Sprite" parent="bomber"]
 scale = Vector2( 3, 3 )
 texture = ExtResource( 2 )
+
+[node name="compass" parent="bomber" instance=ExtResource( 5 )]
+position = Vector2( 271.997, -574.903 )
+
+[node name="map" type="Sprite" parent="bomber"]
+position = Vector2( -42.4006, -208.652 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 6 )
+
+[node name="sprite_map" type="Sprite" parent="bomber/map"]

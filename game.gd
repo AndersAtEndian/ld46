@@ -61,6 +61,8 @@ func _process(delta):
 		
 	$bomber.rotation = deg2rad(plane_direction_deg)
 	
+	$bomber/compass.set_needle_rotation(plane_direction_deg)
+	
 	var forward_direction := Vector2(sin(deg2rad(plane_direction_deg)), -1 * cos(deg2rad(plane_direction_deg)))
 	
 	#$bomber.position -= forward_direction * delta * pixels_per_second_landmarks
@@ -141,7 +143,24 @@ func create_map():
 				elif neighbor_value == 0b0000:
 					$pivot/tile_map.set_cell(x, y, TILES.GRASS_ISLAND)
 	
+	var img = Image.new()
+	img.create(400, 400, false, Image.FORMAT_RGBA8)
+	img.lock()
 	
+	for y in range(-300, 20):
+		for x in range(-150, 150):
+			var map_x := x + 200
+			var map_y := y + 350
+			if $pivot/tile_map.get_cell(x, y) == TILES.WATER:
+				img.set_pixel(map_x, map_y, Color(0.16, 0.80, 0.87, 1.0))
+			else:
+				img.set_pixel(map_x, map_y, Color(0.22, 0.48, 0.27, 1.0))	
+				
+	img.unlock()
+	
+	var image_texture = ImageTexture.new()
+	image_texture.create_from_image(img)
+	$bomber/map/sprite_map.texture = image_texture
 	
 	
 	
